@@ -1,0 +1,6 @@
+{
+  "name": "Protect Toiture - Couvreur en Ardèche",
+  "description": "Artisan couvreur en Ardèche spécialisé en rénovation, démoussage, étanchéité de toiture avec garantie décennale 10 ans et produits 100% biodégradables.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

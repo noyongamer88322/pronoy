@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+@theme {
+  --color-orange: #E97230;
+  --color-orange-hover: #D4601F;
+  --color-orange-soft: rgba(233, 114, 48, 0.12);
+  --color-black: #080808;
+  --color-dark: #0A0A0A;
+  --color-cream: #F9F9F7;
+  --color-card: #F2F3EE;
+  --color-text: #0A0A0A;
+  --color-muted: #6B6B66;
+  --color-star: #FACC15;
+  --color-green: #22C55E;
+
+  --font-display: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  --orange: #E97230;
+  --orange-soft: rgba(233, 114, 48, 0.12);
+  --black: #080808;
+  --cream: #F9F9F7;
+  --card: #F2F3EE;
+  --white: #FFFFFF;
+  --text: #0A0A0A;
+  --muted: #6B6B66;
+  --border: rgba(0, 0, 0, 0.06);
+  --star: #FACC15;
+  --green: #22C55E;
+}
+
+body {
+  background-color: #F9F9F7;
+  color: #0A0A0A;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* Custom button glow */
+.btn-orange-glow {
+  box-shadow: 0 8px 30px rgba(233, 114, 48, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-orange-glow:hover {
+  box-shadow: 0 12px 36px rgba(233, 114, 48, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Card base styles */
+.card-soft {
+  background-color: #F2F3EE;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+.card-soft:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Glassmorphism for hero cards */
+.hero-glass-card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 20px;
+}
+
+/* Ripple click effect container */
+.ripple-circle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  background-color: rgba(233, 114, 48, 0.35);
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple-grow 0.6s ease-out forwards;
+}
+
+@keyframes ripple-grow {
+  to {
+    transform: translate(-50%, -50%) scale(4);
+    opacity: 0;
+  }
+}
+
+/* Pulsing dot */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+.pulse-green-dot {
+  animation: pulse-ring 2s infinite;
+}
+
+/* Orange section marker pulse */
+@keyframes pulse-orange-dot {
+  0% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(233, 114, 48, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 10px rgba(233, 114, 48, 0);
+  }
+  100% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(233, 114, 48, 0);
+  }
+}
+
+.pulse-orange-dot {
+  animation: pulse-orange-dot 2.5s infinite;
+}
+
+/* Smooth input focus */
+.custom-input {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: #E97230;
+  box-shadow: 0 0 0 3px rgba(233, 114, 48, 0.2);
+}
+
+
+/* ─── Cursor indicator: hide on touch / reduced-motion ─── */
+@media (hover: none) and (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor-indicator-circle {
+    display: none !important;
+  }
+}

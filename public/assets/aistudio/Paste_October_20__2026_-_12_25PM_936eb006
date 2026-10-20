@@ -1,0 +1,284 @@
+# PRD — "Protect Toiture" Single-Page Roofing Website (Pixel-Faithful Recreation)
+
+## 0. RULES FOR THE AI BUILDER (READ FIRST)
+1. **Always try updating/editing existing files first. Rewrite a whole file only when really necessary. Avoid repeated full rewrites.**
+2. Recreate the website exactly as described: same layout, same spacing feel, same colors, same animations. Do not simplify or skip any animation.
+3. Build it as a polished, production-quality single-page site (one-page scroll with anchor navigation).
+4. All visible website text stays in **French**, exactly as written in this document.
+5. Fully responsive (desktop 1920 → tablet → mobile 375). Desktop design is described below; adapt sensibly for smaller screens.
+6. Stack (mandatory): **React (Vite) + Tailwind CSS + Framer Motion**. Icons: lucide-react. Fonts via Google Fonts (see 2.6 and 2.7). Build every section as its own React component (see section 8 for structure). Put all colors and fonts in `tailwind.config.js` + CSS variables so they can be changed in one place.
+
+---
+
+## 1. Project Overview
+- **Business:** Protect Toiture — roofer (couvreur) in Ardèche, France. Domain style: protecttoiture.fr
+- **Goal:** Lead generation. Every section pushes the visitor to click **"Devis Gratuit"**, call, or submit the callback form.
+- **Tone:** Trustworthy local artisan, modern, clean, premium. Lots of social proof (4.9/5 Google, 200+ clients, 10-year guarantee).
+- **Page type:** One page, sections in this order: Top bar → Header → Hero → Stats → Services → Réalisations (Avant/Après) → Engagements → Avis → FAQ → Contact → CTA band + Footer.
+
+## 2. Design System
+
+### 2.1 Colors
+| Token | Value | Use |
+|---|---|---|
+| `--orange` | `#E97230` | Primary accent, buttons, active nav, eyebrow labels, icons highlights |
+| `--orange-soft` | `rgba(233,114,48,0.12)` | Soft circles, icon backgrounds, glows |
+| `--black` | `#080808` | Hero overlay, dark cards, footer, black buttons |
+| `--cream` | `#F9F9F7` | Main page background |
+| `--card` | `#F2F3EE` | Light cards (services, reviews, FAQ, contact form panel) |
+| `--white` | `#FFFFFF` | Header background, inputs |
+| `--text` | `#0A0A0A` | Headings |
+| `--muted` | `#6B6B66` | Body/secondary text |
+| `--border` | `rgba(0,0,0,0.06)` | Card borders |
+| `--star` | `#FACC15` | Rating stars |
+| `--green` | `#22C55E` | "Disponible" dot |
+
+### 2.2 Typography
+- **Headings:** Plus Jakarta Sans (500–700), tight letter-spacing (-0.02em). Hero H1 ≈ 80–88px desktop, section H2 ≈ 48–56px, centered.
+- **Body/UI:** Inter (400–600), 15–17px body.
+- **Eyebrow labels:** 11–12px, uppercase, letter-spacing 0.18em, orange, weight 600, with a short orange underline bar (≈24px × 2px) centered below.
+- **Small tags/chips:** 10–11px uppercase, letter-spacing 0.08em, gray text on light-gray pill.
+
+### 2.3 Shapes, spacing, shadows
+- Cards: radius 20–24px, 1px soft border, very soft shadow (`0 10px 30px rgba(0,0,0,0.04)`). Hover: lift `translateY(-6px)` + stronger shadow.
+- Buttons: radius 12px. Pills/chips: fully rounded.
+- Section padding: ~120px vertical desktop, max content width ~1200px, centered.
+- Primary button glow: `box-shadow: 0 8px 30px rgba(233,114,48,0.35)`.
+
+### 2.4 Buttons
+- **Primary (orange):** orange bg, white bold text, label + right arrow icon (→). Hover: slightly darker, arrow slides 4px right, glow increases.
+- **Dark (black):** black bg, white text + arrow, used for "Démarrer mon projet".
+- **Phone button:** soft bordered box with phone icon (orange) + small text "Appel gratuit" and the number in bold.
+
+### 2.5 Decorative background elements
+- Section backgrounds contain **two overlapping soft orange/peach circles** (one ring outline ~40px, one filled soft ~50px) floating slowly (gentle up/down + slight rotate loop, 6–8s). They appear in Services, Réalisations, Engagements, Avis, Contact sections near the section heading area, left or right side.
+
+### 2.6 Color Combination Guide (which color goes where)
+**Palette idea:** warm orange accent + pure black + soft cream. Only ONE accent color (orange). Never add blue/green/purple to the design (green only for the tiny "Disponible" dot, yellow only for stars).
+
+| Area | Background | Heading text | Body text | Accent |
+|---|---|---|---|---|
+| Top info bar | `#0A0A0A` | — | `#FFFFFF` / `#A1A1AA` | stars `#FACC15` |
+| Header | `#FFFFFF` (90% + blur) | logo text `#0A0A0A` | nav `#6B6B66` | active nav + button `#E97230` |
+| Hero | dark photo + overlay `rgba(8,8,8,0.8)` | `#FFFFFF` + 2nd line `#E97230` | `#B5B5B0` (bold parts `#FFFFFF`) | orange buttons, orange check icons |
+| Hero glass cards | `rgba(255,255,255,0.06)` + border `rgba(255,255,255,0.10)` + blur 16px | `#FFFFFF` | `#A1A1AA` | icon tile `#E97230` |
+| Stats strip | `#F9F9F7` | numbers `#0A0A0A` | label `#6B6B66` | suffix `#E97230` |
+| Services / Avis / FAQ / Contact | page `#F9F9F7`, cards `#F2F3EE` | `#0A0A0A` | `#6B6B66` | eyebrow, links, hover border `#E97230` |
+| Icon tiles (services, engagements) | `#0A0A0A` | icon `#FFFFFF` | — | hover → bg `#E97230` |
+| Black call card (contact) | `#0A0A0A` | number `#FFFFFF` | `#8A8A85` | label + phone icon `#E97230` |
+| CTA band + Footer | `#080808` | `#FFFFFF` | `#8A8A85` | button `#E97230` + glow, link hover `#E97230` |
+| Inputs | `#FFFFFF` | — | placeholder `#A8A8A3` | focus border `#E97230` + ring `rgba(233,114,48,0.2)` |
+
+**Buttons:** Orange = bg `#E97230`, text `#FFFFFF`, hover `#D4601F`. Black = bg `#0A0A0A`, text `#FFFFFF`, hover `#262626`.
+**Contrast rule:** on dark backgrounds only white or orange text; on cream backgrounds only black, gray or orange text.
+**Gradients (use sparingly):** hero overlay `linear-gradient(90deg, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.6) 60%, rgba(8,8,8,0.8) 100%)`; orange glow `radial-gradient(circle, rgba(233,114,48,0.25), transparent 70%)`.
+
+### 2.7 Font Style Guide
+**Fonts (Google Fonts):** `Plus Jakarta Sans` (weights 500, 600, 700, 800) for headings, logo, numbers, buttons. `Inter` (weights 400, 500, 600) for paragraphs, nav, forms, labels. Fallback: `system-ui, sans-serif`.
+
+| Element | Font | Size (desktop / mobile) | Weight | Letter-spacing | Line-height | Color |
+|---|---|---|---|---|---|---|
+| Hero H1 | Plus Jakarta Sans | 84px / 44px | 500 (line 1), 600 (line 2) | -0.03em | 1.05 | white / orange |
+| Section H2 | Plus Jakarta Sans | 52px / 32px | 500 | -0.02em | 1.1 | `#0A0A0A` |
+| Card title (H3) | Plus Jakarta Sans | 20px / 18px | 700 | -0.01em | 1.3 | `#0A0A0A` |
+| Stat number | Plus Jakarta Sans | 56px / 40px | 700 | -0.02em | 1 | `#0A0A0A` |
+| Stat suffix (+, ans, h, /5) | Plus Jakarta Sans | 24px / 18px | 600 | 0 | 1 | `#E97230` |
+| Hero paragraph | Inter | 18px / 16px | 400 | 0 | 1.6 | `#B5B5B0` |
+| Body text | Inter | 15–16px | 400 | 0 | 1.65 | `#6B6B66` |
+| Nav links | Inter | 14px | 500 | 0 | 1 | `#6B6B66` |
+| Buttons | Plus Jakarta Sans | 15px | 700 | 0 | 1 | white |
+| Eyebrow label | Inter | 11–12px, UPPERCASE | 600 | 0.18em | 1 | `#E97230` |
+| Tags / chips | Inter | 10–11px, UPPERCASE | 500 | 0.08em | 1 | `#6B6B66` on `#EAEAE5` pill |
+| Form labels | Inter | 11px, UPPERCASE | 700 | 0.08em | 1 | `#0A0A0A` |
+| Input text | Inter | 15px | 400 | 0 | 1.4 | `#0A0A0A` |
+| Footer headings | Inter | 12px, UPPERCASE | 700 | 0.15em | 1 | white |
+| Footer links / small print | Inter | 14px / 11px | 400 | 0 | 1.6 | `#8A8A85` / `#5A5A56` |
+| Logo "PROTECT" / "TOITURE" | Plus Jakarta Sans | 16px / 8px (UPPERCASE) | 800 / 700 | 0.02em / 0.3em | 1 | black (white in footer) / orange |
+
+**Style feel:** big, light-to-medium weight headlines with tight spacing (modern, premium), small uppercase tracked labels for hierarchy, generous white space. Use `text-wrap: balance` on headings.
+
+---
+
+## 3. Global Behaviors
+- **Smooth scrolling** to anchors; offset for sticky header.
+- **Scroll progress bar:** thin (2–3px) orange bar at very top of the header that grows left→right with page scroll.
+- **Active nav highlighting:** the nav link of the section currently in view turns orange and shows a small orange underline beneath it (animated sliding underline between links).
+- **Reveal-on-scroll:** every section heading, card, stat and form block fades in + slides up (24–40px, 0.6–0.8s, ease-out), cards staggered by 100–150ms.
+- **Custom cursor ripple:** on click/hover over nav links and buttons, a soft orange circular ripple (≈30px, fading) appears at the pointer position (visible in the video on nav hover/click).
+- Links `tel:+33623838816`, `mailto:protectoiture74@gmail.com`; WhatsApp-style link may open an external app (optional).
+
+---
+
+## 4. Sections (top to bottom)
+
+### 4.1 Top Info Bar (very thin, dark, full width)
+- Height ≈ 32px, bg `#0A0A0A`, small white/gray 12px text.
+- **Left:** clock icon + "Lun - Sam : 8h00 - 19h00"
+- **Center:** 5 yellow stars + "4.9/5 — 47 avis Google" (bold 4.9/5)
+- **Right:** phone icon + "06 23 83 88 16"
+- Hides/collapses when the user scrolls down (only the main header stays sticky).
+
+### 4.2 Sticky Header / Navigation
+- White background, subtle bottom shadow on scroll, height ≈ 72px. Glass blur (`backdrop-blur`) with ~90% white when scrolled.
+- **Logo (left):** rounded-square orange badge with white bold "P" + text "PROTECT" (bold, black) and tiny letter-spaced orange text "TOITURE" below.
+- **Nav (center):** Accueil · Services · Réalisations · Engagements · Avis · Contact. 14px, medium, gray; hover → black; active → orange with underline.
+- **Right:** soft phone chip (orange phone icon in peach rounded square) + "06 23 83 88 16" bold, then orange button **"Devis Gratuit →"**.
+- Orange scroll-progress line on the very top edge of this header.
+- Mobile: hamburger menu → full-width slide-down panel with the same links + CTA.
+
+### 4.3 Hero (full viewport height, dark)
+- **Background:** full-bleed photo of terracotta/dark roof tiles and wooden roof frame (Ardèche roofing), with a strong dark overlay (≈ 75–85% black gradient, darker on the left). Subtle slow zoom (Ken Burns, scale 1 → 1.08 over 20s).
+- **Left content (max ~640px):**
+  1. Availability pill: glass/dark pill with **green pulsing dot** + "Disponible — Intervention sous 24h en Ardèche".
+  2. H1 (huge, two lines): "Votre Toiture" in white, then "Mérite le Meilleur" in orange. Each word fades/slides up in sequence (word-by-word stagger).
+  3. Paragraph (gray-white, 18px): "Artisan couvreur en Ardèche. Rénovation, démoussage, étanchéité. **Garantie 10 ans**, produits 100% biodégradables." ("Garantie 10 ans" in bold white.)
+  4. Buttons row: orange **"Devis Gratuit →"** + phone box (phone icon, "Appel gratuit", **06 23 83 88 16**).
+  5. Trust row (small, with icons, below buttons): ⭐ "4.9/5 Google — 47 avis" · 🕒 "Garantie 10 ans — Décennale" (use shield/clock icons) · "Devis 24h — Sans engagement".
+- **Right floating glass cards (dark translucent, blur, white border 8%, radius 20px), each floating with slow up/down loop (4–6s, offsets different):**
+  - **Card A (top right, larger):** orange shield icon tile + "Garantie 10 ans" / "Assurance décennale incluse", divider, then 3 checklist rows with orange check icons: "Couverture complète", "Pièces et main d'œuvre", "Assurance décennale".
+  - **Card B (middle):** Google "G" circle + 5 yellow stars + **4.9** / "47 avis vérifiés".
+  - **Card C (bottom right):** users icon tile + **200+** / "Clients satisfaits".
+- **Bottom of hero:** thin bar with a white circle "G" badge + stars "4.9/5 — 47 avis" and three small items: "Garantie Décennale", "Produits Biodégradables", "200+ clients satisfaits".
+- **Scroll indicator:** tiny "SCROLL" label (letter-spaced) + thin vertical line with an orange dot moving down in a loop, centered at bottom.
+
+### 4.4 Stats Strip (light background, right under hero)
+4 columns, centered, each with a small outlined icon on top (house, shield, timer, star), big number, tiny uppercase label:
+1. 🏠 **200+** — "TOITURES RÉNOVÉES"
+2. 🛡 **10 ans** — "GARANTIE DÉCENNALE"
+3. ⏱ **24h** — "DÉLAI D'INTERVENTION"
+4. ⭐ **4.9/5** — "SATISFACTION CLIENT"
+- Numbers are bold ~56px; suffixes ("+", "ans", "h", "/5") are smaller and orange.
+- **Count-up animation** from 0 when scrolled into view (1.5–2s, ease-out). Decimal count for 4.9.
+
+### 4.5 Services — id `services`
+- Eyebrow: "NOS EXPERTISES" (with underline bar). H2: "Comment pouvons-nous vous aider ?" Sub: "De la recherche de fuites à la rénovation complète, des solutions adaptées et durables pour votre toiture en Ardèche."
+- 3 equal cards in a row (`#F2F3EE`-ish light cards with border, radius 24px, padding 32px):
+  1. Icon: black rounded square with white **search** icon. Title **"Recherche de Fuites"**. Text: "Votre toit fuit ? On localise l'infiltration rapidement et on répare durablement pour éviter les dégâts." Tags: "DIAGNOSTIC PRÉCIS", "INTERVENTION RAPIDE", "RÉPARATION DURABLE". Link: "En savoir plus →" (orange, bold).
+  2. Icon: black square with white **hammer** icon. Title **"Rénovation de Toiture"**. Text: "Tuiles cassées, toiture vieillissante ? On remet votre couverture en état pour des années de tranquillité." Tags: "REMPLACEMENT TUILES", "RÉFECTION COMPLÈTE", "CHARPENTE". Link: "En savoir plus →".
+  3. Icon: black square with white **sparkles** icon. Title **"Démoussage & Traitement"**. Text: "Mousse, lichen, traces noires ? On nettoie en profondeur et on protège avec un hydrofuge biodégradable." Tags: "NETTOYAGE HAUTE PRESSION", "TRAITEMENT ANTI-MOUSSE", "HYDROFUGE 10 ANS". Link: "En savoir plus →".
+- **Animations:** cards stagger-reveal; on hover: lift, border turns slightly orange, icon tile turns orange, arrow in link slides right.
+- The floating double-circle decoration sits at the right of the heading.
+
+### 4.6 Réalisations (Avant / Après) — id `realisations`
+- Eyebrow: "AVANT / APRÈS". H2: "Nos Réalisations". Sub: "Plus de 200 chantiers réalisés en Ardèche."
+- Two small stat chips under sub: 👍 **"98%** clients satisfaits" and 📈 **"+40** chantiers en 2025".
+- **Before/After slider card (center, ~780px wide, radius 24px, overflow hidden, shadow):** left half = old dark mossy roof tiles with dark label pill **"AVANT"**; right half = clean new orange terracotta roof with label pill **"APRÈS"**. A vertical white divider line with a round handle; user can drag it (mouse/touch) to reveal more/less. On first view it auto-animates the divider left ↔ right once to hint interactivity.
+- Below: black button **"Démarrer mon projet →"** and small caption "✓ Devis gratuit — Réponse garantie sous 24h" (gray with orange check).
+- Reveal: card scales from 0.95 → 1 with fade.
+
+### 4.7 Engagements — id `engagements`
+- Two-column layout.
+- **Left:** large rounded image (radius 24px) of a smiling roofer in a dark t-shirt installing orange terracotta tiles. Floating white rating chip on top-left corner overlapping the image: ★ 4.9 with "47 avis vérifiés" (small, with a yellow star icon). A second small white floating card at bottom-right of image: shield icon tile + "Assurance décennale" / "Travaux garantis". Both float slowly (up/down loop).
+- **Right:** Eyebrow "NOS ENGAGEMENTS". H2: **"Pourquoi Nous Faire Confiance ?"** Sub: "Pas de compromis. Les meilleurs matériaux, les meilleurs produits, pour une protection durable de votre toiture." Green-ish pill: "🛡 **100%** de nos clients nous recommandent".
+- Then 3 stacked white/light cards (icon in black rounded square + bold title + gray text), staggered slide-in from the right:
+  1. Shield icon — **"Garantie Décennale"** — "Tous nos travaux sont couverts par une assurance décennale. Votre toiture est protégée pendant 10 ans."
+  2. Leaf icon — **"Produits 100% Biodégradables"** — "Nos produits de traitement sont écologiques et sans danger pour vos sols, votre jardin et vos proches. Notre traitement hydrofuge pénètre en profondeur et protège sans nuire pendant des années."
+  3. Ticket/receipt icon — **"Devis Gratuit, Sans Engagement"** — "Déplacement et diagnostic gratuits. Devis détaillé remis sous 24h. Aucun frais caché, zéro surprise."
+- Below cards: small label "CERTIFICATIONS & GARANTIES" (tiny, letter-spaced gray) and 4 small chips with orange icons: "Garantie 10 ans", "Assurance décennale", "Produits biodégradables", "Artisan qualifié".
+
+### 4.8 Avis (Testimonials) — id `avis`
+- Eyebrow: "AVIS CLIENTS VÉRIFIÉS". H2: **"Ils Nous Ont Fait Confiance"**.
+- Grid of **6 review cards** (3 columns × 2 rows), light cards with border, radius 20px. Each: 5 yellow stars (top-left), small "✓ verified" circle icon (top-right), quote text (15px), and at bottom a **black circular avatar with white initial** + name (bold) + location with pin icon + tiny "il y a X semaines" on the right.
+  1. **Jean-Pierre M.** (Aubenas 2021): "Travail impeccable du début à la fin. Le chantier était propre chaque soir. Ma toiture a retrouvé une seconde jeunesse. Je recommande vivement !"
+  2. **Sophie L.** (Privas 2021): "Intervention rapide pour une fuite urgente un dimanche. L'équipe a été rassurante et très efficace. Le devis était clair et sans surprise. Merci !"
+  3. **Marc D.** (Vallon-Pont-d'Arc 2021): "J'ai comparé 3 devis, c'est Protect Toiture que j'ai choisi pour leur honnêteté et leur transparence. Aucune vente forcée. Un vrai artisan de confiance."
+  4. **Catherine B.** (Villeneuve-de-Berg 2021): "Notre toiture avait 30 ans de mousse. Après le passage de Protect Toiture, on ne la reconnaît plus ! Produits écolos en plus, c'est un vrai plus."
+  5. **Philippe R.** (Lavilledieu 2021): "Très professionnel. Ils m'ont tout expliqué avant de commencer et le résultat est au-delà de mes attentes. La garantie 10 ans me rassure."
+  6. **Marie-Claire G.** (Lablachère 2021): "Deuxième fois que je fais appel à eux. Toujours aussi sérieux et ponctuels. Mon voisin les a aussi contactés après avoir vu le résultat chez moi !"
+  - (Use "il y a X semaines" small text at card bottom-right; any plausible values.)
+- Under the grid: centered link/pill **"Voir nos 47 avis sur Google ↗"**.
+- **Animations:** staggered fade-up; hover → card lifts with soft shadow; stars light up one by one (fast sequence) on reveal.
+
+### 4.9 FAQ
+- Eyebrow: "FAQ". H2: **"Vos Questions, Nos Réponses"** (centered, max width ~720px).
+- Accordion list, each item a light rounded card (radius 16px) with bold question (left) and a circular chevron button (right):
+  1. "Quelle est votre zone d'intervention ?"
+  2. "Comment se déroule un devis ?"
+  3. "Vos produits sont-ils dangereux pour l'environnement ?"
+  4. "Quelle garantie offrez-vous ?"
+  5. "Quel est le délai d'intervention ?"
+  6. "Combien coûte un démoussage de toiture en Ardèche ?" — Answer: "Le prix varie selon la surface de votre toiture, son état et le type de traitement nécessaire. En moyenne, comptez entre 15€ et 30€/m² pour un démoussage avec traitement hydrofuge. Le mieux est de nous appeler pour un devis gratuit et personnalisé."
+  7. "Intervenez-vous en urgence le week-end ?"
+  - Write short, sensible French answers for the others (zone: Ardèche & alentours; devis: appel/formulaire → visite gratuite → devis sous 24h; produits: 100% biodégradables; garantie: décennale 10 ans; délai: intervention sous 24h; week-end: oui en cas d'urgence, Lun–Sam 8h–19h + urgences).
+- **Behavior:** only one item open at a time. Open item: question turns **orange**, chevron button turns orange-filled with white up-arrow, card gets a soft orange border/shadow, answer expands with smooth height animation (0.35s) and fade.
+
+### 4.10 Contact — id `contact`
+- Eyebrow: "CONTACT". H2: **"Parlons de Votre Projet"**. Sub: "Recevez un devis gratuit sous 24h. Sans engagement."
+- Avatar-stack (3 small black circles with white initials J, S, M) + text "**12 personnes** ont demandé un devis ce mois".
+- Two columns:
+  - **Left column (stacked):**
+    1. **Black call card** (radius 24px, subtle shadow): small orange label "VOUS PRÉFÉREZ APPELER ?", orange phone icon + huge white **06 23 83 88 16**, small gray "Lun - Sam : 8h00 - 19h00".
+    2. **Info card (light):** 3 rows with icon in dark rounded square — EMAIL: protectoiture74@gmail.com · ADRESSE: 07170 Lavilledieu, Ardèche · HORAIRES: Lun - Sam : 8h00 - 19h00. Labels tiny uppercase gray, values bold.
+    3. **Mini testimonial card:** black circle "M", 5 stars, italic quote "J'ai demandé un devis le lundi, rappelé dans l'heure. Chantier impeccable terminé en 3 jours." — "Marc D. — Vallon-Pont-d'Arc".
+  - **Right column — form card (light card, large radius, padding 32px):**
+    - Header row: bold **"Être Rappelé Gratuitement"** + green pill "● Disponible" (pulsing green dot).
+    - Fields (labels tiny uppercase bold): **VOTRE NOM \*** (placeholder "Jean Dupont"), **VOTRE TÉLÉPHONE \*** ("06 12 34 56 78"), **CODE POSTAL \*** ("07170"), **VOTRE BESOIN** (optionnel) textarea ("Décrivez brièvement votre besoin...").
+    - Consent checkbox: "J'accepte que mes données soient traitées pour me recontacter. Consultez notre **politique de confidentialité**. \*" (link orange).
+    - Full-width orange submit button with phone icon: **"Être Rappelé Gratuitement"**.
+    - Under button: 3 tiny trust items with orange icons: "Réponse 24h" · "100% gratuit" · "Sans engagement".
+    - Bottom: avatar stack (C, P, S) + "**Catherine, Philippe** et **Sophie** ont demandé un devis récemment".
+- **Form behavior:** inline validation (required name/phone/postcode, French phone format), input focus → white bg + orange border + soft orange ring. Submit shows loading spinner then success state ("Merci ! Nous vous rappelons sous 24h."). Hook up to email/API endpoint (placeholder `POST /api/contact`).
+- A small blue dot indicator floats near the form (decorative, optional).
+
+### 4.11 CTA Band + Footer (full black, `#080808`)
+- **CTA band:** left: H2 white **"Prêt à protéger votre toiture ?"** + gray "Obtenez votre devis gratuit en moins de 24h. Sans engagement." Right: orange glowing button **"Devis Gratuit →"** + phone icon (orange) + "06 23 83 88 16". Small orange dot pulses below center as a section marker.
+- **Footer (4 columns):**
+  1. Logo (same as header, white text) + "Artisan couvreur de confiance en Ardèche. Rénovation, démoussage, étanchéité. Garantie décennale 10 ans." + dark rounded chip: 5 yellow stars **4.9/5** (47 avis).
+  2. **NAVIGATION** (bold, letter-spaced white): Accueil, Services, Réalisations, Engagements, Avis, Contact (gray links, hover white/orange).
+  3. **CONTACT:** phone icon tile + 06 23 83 88 16; mail icon tile + protectoiture74@gmail.com; pin icon tile + 07170 Lavilledieu, Ardèche.
+  4. **INFORMATIONS:** "Mentions Légales", "Politique de Confidentialité"; below in very dim gray tiny text: "SIREN : [placeholder]" · "TVA : [placeholder]" · "Entrepreneur individuel".
+- **Bottom bar** (thin divider above, tiny dim text): left "© 2026 Protect Toiture — [Nom du gérant]. Tous droits réservés." right "Site réalisé avec ♥ par [Agence]".
+
+---
+
+## 5. Animation Checklist (nothing may be skipped)
+1. Scroll progress bar (orange) at top of header.
+2. Top info bar hides on scroll; header gets blur + shadow on scroll.
+3. Nav active-section highlighting with sliding underline.
+4. Click/hover orange ripple circle on nav links and buttons.
+5. Hero: Ken Burns background zoom, word-by-word H1 reveal, green pulsing dot, floating glass cards (loop up/down, staggered), animated scroll indicator dot.
+6. Stats count-up on view.
+7. Floating double-circle decorations (slow float + rotate) in every light section.
+8. Reveal-on-scroll (fade + slide-up, staggered) for all headings, cards, chips.
+9. Service cards hover: lift, orange icon tile, arrow slide.
+10. Before/After draggable slider with intro auto-sweep.
+11. Engagements image floating chips; cards slide in from right.
+12. Review cards: stars sequential light-up, hover lift.
+13. FAQ accordion with smooth height + orange active state (single open).
+14. Form input focus glow, validation, submit loading + success state; pulsing "Disponible" dot.
+15. Primary buttons: glow + arrow translate on hover; respect `prefers-reduced-motion`.
+
+## 6. SEO & Technical
+- Title: "Protect Toiture | Couvreur Expert en Ardèche — Devis Gratuit". Meta description about rénovation, démoussage, étanchéité, garantie décennale 10 ans, Ardèche.
+- Semantic HTML (header, main, section, footer), one H1, alt text on all images, JSON-LD `RoofingContractor` / `LocalBusiness` schema (name, phone, address Lavilledieu 07170, hours Lun–Sam 8–19h, aggregateRating 4.9 / 47).
+- Performance: lazy-load images, WebP, preload fonts, Lighthouse ≥ 90.
+- Images needed (use high-quality placeholders if not supplied): dark roof tiles/frame hero background; before (mossy dark roof) and after (clean terracotta roof); smiling roofer installing tiles.
+
+## 7. Acceptance Criteria
+- Side by side with the reference video, layout, colors, typography, section order and every animation listed above match.
+- All texts in French exactly as given. All links/buttons work (anchors, tel:, mailto:, form).
+- Responsive and smooth at 60fps; no layout shift.
+
+---
+
+## 8. React Project Structure (follow this)
+```
+protect-toiture/
+├─ index.html                (Google Fonts links, meta, JSON-LD)
+├─ tailwind.config.js        (colors + fonts from 2.6 / 2.7)
+├─ src/
+│  ├─ main.jsx, App.jsx      (sections in order, ScrollProgress, RippleCursor)
+│  ├─ index.css              (CSS variables, base styles, keyframes)
+│  ├─ hooks/                 useScrollSpy.js, useCountUp.js, useInView.js
+│  ├─ components/
+│  │  ├─ TopBar.jsx, Header.jsx, MobileMenu.jsx
+│  │  ├─ Hero.jsx (+ GlassCard.jsx), Stats.jsx
+│  │  ├─ Services.jsx, BeforeAfter.jsx, Engagements.jsx
+│  │  ├─ Reviews.jsx, Faq.jsx, Contact.jsx, CtaFooter.jsx
+│  │  └─ ui/ Button.jsx, SectionHeading.jsx, FloatingCircles.jsx, Reveal.jsx
+│  └─ data/                  services.js, reviews.js, faq.js (all French text here)
+└─ public/images/            hero.jpg, before.jpg, after.jpg, roofer.jpg
+```
+- Use Framer Motion: `whileInView` + `viewport={{ once: true }}` for reveals, `animate` loops for floating elements, `AnimatePresence` for FAQ answers and form success state.
+- Keep all text content in `src/data/*.js` so it is easy to edit; do not hardcode text across many files.
+- Remember rule 1: edit existing files first, no repeated full rewrites.
